@@ -3,17 +3,17 @@
 # ------------------------------------------------------
 
 type Mutation {
-  createTodo(todo: TodoInput!): todo!
-  updateTodo(todo: TodoInput!, id: Float!): todo!
-  deleteTodo(id: Float!): todo!
+  createTodo(todo: TodoInput!): Todo!
+  updateTodo(todo: TodoInput!, id: Float!): Todo!
+  deleteTodo(id: Float!): Todo!
 }
 
 type Query {
-  findAll: [todo!]!
-  findTodoById(id: Float!): todo!
+  findAll: [Todo!]!
+  findTodoById(id: Float!): Todo!
 }
 
-type todo {
+type Todo {
   id: ID!
   title: String!
   completed: Boolean!

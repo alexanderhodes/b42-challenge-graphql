@@ -11,7 +11,7 @@ describe('TodosResolver (e2e)', () => {
             imports: [
                 TodoModule,
                 GraphQLModule.forRoot({
-                    autoSchemaFile: 'schema.gql'
+                    autoSchemaFile: 'test/schema.gql'
                 }),
                 MongooseModule.forRoot('mongodb://localhost:27018/b42challenge')
             ]
@@ -49,7 +49,6 @@ describe('TodosResolver (e2e)', () => {
     `;
 
     it('createTodo', () => {
-        console.log('createTodoQuery', createTodoQuery);
         sendRequestAndValidate(app.getHttpServer, createTodoQuery, todo);
     });
 
