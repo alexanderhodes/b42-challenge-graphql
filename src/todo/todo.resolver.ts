@@ -7,16 +7,19 @@ import {HttpException, HttpStatus} from '@nestjs/common';
 @Resolver(() => TodoType)
 export class TodoResolver {
 
-    constructor(private todoService: TodoService) {}
+    constructor(private todoService: TodoService) {
+    }
 
     @Query(() => [TodoType])
-    async findAll(): Promise<TodoType[]> {
-       return await this.todoService.findAll();
+    async allTodos(): Promise<TodoType[]> {
+        console.log('findAll');
+        return await this.todoService.findAll();
     }
 
     @Query(() => TodoType)
-    async findTodoById(@Args('id') id: number): Promise<TodoType> {
-        const todo = await this.todoService.findById(id)
+    async todoById(@Args('id') id: number): Promise<TodoType> {
+        console.log('todoById', id);
+        const todo = await this.todoService.findById(id);
         if (todo) {
             return todo;
         }
@@ -25,11 +28,13 @@ export class TodoResolver {
 
     @Mutation(() => TodoType)
     async createTodo(@Args('todo') todo: TodoInput): Promise<TodoType> {
+        console.log('create todo');
         return await this.todoService.create(todo);
     }
 
     @Mutation(() => TodoType)
     async updateTodo(@Args('id') id: number, @Args('todo') todo: TodoInput): Promise<TodoType> {
+        console.log('update todo', id);
         const updatedTodo = await this.todoService.update(id, todo);
         if (updatedTodo) {
             return updatedTodo;
@@ -39,6 +44,7 @@ export class TodoResolver {
 
     @Mutation(() => TodoType)
     async deleteTodo(@Args('id') id: number): Promise<TodoType> {
+        console.log('delete todo', id);
         const deletedTodo = await this.todoService.delete(id);
         if (deletedTodo) {
             return deletedTodo;
