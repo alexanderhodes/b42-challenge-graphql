@@ -9,8 +9,8 @@ type Mutation {
 }
 
 type Query {
-  findAll: [Todo!]!
-  findTodoById(id: Float!): Todo!
+  allTodos: [Todo!]!
+  todoById(id: Float!): Todo!
 }
 
 type Todo {
