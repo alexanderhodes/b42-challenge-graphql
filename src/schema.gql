@@ -20,7 +20,6 @@ type Todo {
 }
 
 input TodoInput {
-  id: Int!
   title: String!
   completed: Boolean = false
 }

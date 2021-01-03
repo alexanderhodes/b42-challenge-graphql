@@ -20,6 +20,8 @@ export class TodoService {
     }
 
     async create(todo: TodoType): Promise<TodoType> {
+        const latestTodos = await this.todoModel.find().sort({_id: -1}).limit(1).exec();
+        todo.id = latestTodos ? latestTodos[0].id + 1 : 1;
         const createdTodo = new this.todoModel(todo);
         return await createdTodo.save();
     }
