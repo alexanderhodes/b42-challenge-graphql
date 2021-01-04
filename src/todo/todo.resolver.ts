@@ -1,8 +1,13 @@
-import {Resolver, Query, Mutation, Args} from '@nestjs/graphql';
+import {HttpException, HttpStatus, Logger} from '@nestjs/common';
+import {Resolver, Query, Mutation, Args, Subscription} from '@nestjs/graphql';
+import {PubSub} from 'graphql-subscriptions';
 import {TodoService} from './todo.service';
 import {TodoType} from './todo.type';
 import {TodoInput} from './todo.input';
-import {HttpException, HttpStatus, Logger} from '@nestjs/common';
+import {TodoChangedType} from './todo-changed.type';
+
+const pubSub = new PubSub();
+const todosChanged = 'todosChanged';
 
 @Resolver(() => TodoType)
 export class TodoResolver {
@@ -32,7 +37,12 @@ export class TodoResolver {
     async createTodo(@Args('todo') todo: TodoInput): Promise<TodoType> {
         this.logger.log('create todo');
         this.logger.log(JSON.stringify(todo));
-        return await this.todoService.create(todo);
+        const createdTodo = await this.todoService.create(todo);
+        await pubSub.publish(todosChanged, {
+            operation: 'create',
+            todo: createdTodo
+        } as TodoChangedType);
+        return createdTodo;
     }
 
     @Mutation(() => TodoType)
@@ -53,10 +63,21 @@ export class TodoResolver {
         const deletedTodo = await this.todoService.delete(id);
         if (deletedTodo) {
             this.logger.log(JSON.stringify(deletedTodo));
+            await pubSub.publish(todosChanged, {
+                operation: 'create',
+                todo: deletedTodo
+            } as TodoChangedType);
             return deletedTodo;
         }
         this.logger.error(`delete failed for todo with id ${id}`);
         throw new HttpException(`delete failed for todo with id ${id}`, HttpStatus.BAD_REQUEST);
+    }
+
+    @Subscription(() => TodoChangedType, {
+        name: todosChanged
+    })
+    addTodoHandler() {
+        return pubSub.asyncIterator(todosChanged);
     }
 
 }

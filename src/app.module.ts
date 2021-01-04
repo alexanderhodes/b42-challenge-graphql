@@ -11,7 +11,8 @@ import {TodoModule} from './todo';
         GraphQLModule.forRoot({
             debug: false,
             playground: true,
-            autoSchemaFile: 'src/schema.gql'
+            autoSchemaFile: 'src/schema.gql',
+            installSubscriptionHandlers: true
         }),
         MongooseModule.forRoot('mongodb://localhost:27018/b42challenge'),
     ],

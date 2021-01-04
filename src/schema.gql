@@ -13,10 +13,19 @@ type Query {
   todoById(id: Float!): Todo!
 }
 
+type Subscription {
+  todosChanged: TodoChanged!
+}
+
 type Todo {
   id: ID!
   title: String!
   completed: Boolean!
+}
+
+type TodoChanged {
+  operation: String!
+  todo: Todo!
 }
 
 input TodoInput {
