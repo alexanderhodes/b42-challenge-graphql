@@ -28,7 +28,7 @@ export class TodoService {
 
     async update(id: number, todo: TodoType): Promise<TodoType> {
         const response = await this.todoModel.updateOne({"id": id}, todo).exec();
-        return response.nModified === 1 || response.n === 1 ? todo : null;
+        return response.nModified === 1 || response.n === 1 ? await this.findById(id) : null;
     }
 
     async delete(id: number): Promise<TodoType> {
